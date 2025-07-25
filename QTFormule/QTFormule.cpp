@@ -88,7 +88,6 @@ void QTFormule::ButtonOK()
 void QTFormule::ButtonNumbers()
 {
     QPushButton* Numbers = (QPushButton*)sender();
-     AllNumbers;
     AllNumbers = ui->textEdit->toPlainText() + Numbers->text();
     ui->textEdit->setText(AllNumbers);
 
@@ -98,7 +97,6 @@ void QTFormule::ButtonNumbers()
 void QTFormule::ButtonOperation()
 {
     QPushButton* Operation = (QPushButton*)sender();
-    QString AllOperation;
     AllOperation = ui->textEdit->toPlainText() + Operation->text();
     ui->textEdit->setText(AllOperation);
 }
