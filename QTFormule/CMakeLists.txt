@@ -20,6 +20,7 @@ set(PROJECT_SOURCES
     QTFormule.ui
     QTFormule.h
     QTFormule.cpp
+    ColumnFields.cpp
 )
 
 qt_add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})

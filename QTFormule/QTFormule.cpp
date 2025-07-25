@@ -9,6 +9,11 @@ QTFormule::QTFormule(QWidget *parent)
 
     QLocale::setDefault(QLocale::system());
 
+    //Убираем сворачивание, разворачивание и крестик
+    this->setWindowFlag(Qt::WindowCloseButtonHint, false);
+    this->setWindowFlag(Qt::WindowMinimizeButtonHint, false);
+    this->setWindowFlag(Qt::WindowMaximizeButtonHint, false);
+
     //Для взаимодействия с формой
     connect(ui->ButtonCancel, SIGNAL(clicked()), this, SLOT(ButtonCancel()));
     connect(ui->ButtonHelp, SIGNAL(clicked()), this, SLOT(ButtonHelp()));
@@ -41,15 +46,30 @@ QTFormule::QTFormule(QWidget *parent)
     connect(ui->ButtonDivision, SIGNAL(clicked()), this, SLOT(ButtonOperation()));
     connect(ui->ButtonExponentiation, SIGNAL(clicked()), this, SLOT(ButtonOperation()));
     connect(ui->ButtonIncrease, SIGNAL(clicked()), this, SLOT(ButtonOperation()));
+
     //Функции
-    ui->TableWidgetFunction->setRowCount(2);
+    ui->TableWidgetFunction->verticalHeader()->setVisible(false);
+    ui->TableWidgetFunction->horizontalHeader()->setVisible(false);
+    ui->TableWidgetFunction->setRowCount(10);
     ui->TableWidgetFunction->setColumnCount(1);
+    ui->TableWidgetFunction->setColumnWidth(0, 130);
+    //connect(ui->TableWidgetFunction, SIGNAL(cellClicked(int, int)), this, SLOT(PushInColumn()));
+
     //Переменные
-    ui->TableWidgetVariables->setRowCount(2);
+    ui->TableWidgetVariables->verticalHeader()->setVisible(false);
+    ui->TableWidgetVariables->horizontalHeader()->setVisible(false);
+    ui->TableWidgetVariables->setRowCount(10);
     ui->TableWidgetVariables->setColumnCount(1);
+    ui->TableWidgetVariables->setColumnWidth(0, 140);
+    //connect(ui->TableWidgetVariables, SIGNAL(cellClicked(int, int)), this, SLOT(PushInColumn()));
+
     //Параметры
-    ui->TableWidgetParameters->setRowCount(2);
+    ui->TableWidgetParameters->verticalHeader()->setVisible(false);
+    ui->TableWidgetParameters->horizontalHeader()->setVisible(false);
+    ui->TableWidgetParameters->setRowCount(10);
     ui->TableWidgetParameters->setColumnCount(1);
+    ui->TableWidgetParameters->setColumnWidth(0, 140);
+    //connect(ui->TableWidgetParameters, SIGNAL(cellClicked(int, int)), this, SLOT(PushInColumn()));
 
 }
 
@@ -101,6 +121,7 @@ void QTFormule::ButtonOperation()
     ui->textEdit->setText(AllOperation);
 }
 
+
 void QTFormule::FileSaveTxt(const QString& content)
 {
 
@@ -118,5 +139,10 @@ void QTFormule::FileSaveTxt(const QString& content)
     QTextStream out(&file);
     out << content;
     file.close();
+
+}
+
+void QTFormule::PushInColumn()
+{
 
 }

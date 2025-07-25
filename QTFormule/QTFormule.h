@@ -16,7 +16,8 @@ public:
     ~QTFormule();
     QString AllOperation;
     QString AllNumbers;
-    QString AllText;
+
+    QString AllColumn;
 private slots:
     void ButtonCancel();
     void ButtonNumbers();
@@ -25,6 +26,7 @@ private slots:
     void ButtonOK();
     void ButtonBS();
     void ButtonLF();
+    void PushInColumn();
 private:
     Ui::QTFormuleClass *ui;
     void FileSaveTxt(const QString& content);
