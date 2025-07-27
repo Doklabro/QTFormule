@@ -14,10 +14,6 @@ class QTFormule : public QWidget
 public:
     QTFormule(QWidget *parent = nullptr);
     ~QTFormule();
-    QString AllOperation;
-    QString AllNumbers;
-
-    QString AllColumn;
 private slots:
     void ButtonCancel();
     void ButtonNumbers();
@@ -27,6 +23,10 @@ private slots:
     void ButtonBS();
     void ButtonLF();
     void PushInColumn();
+    void ButtonUpArrow();
+    void ButtonDownArrow();
+    void ButtonRightArrow();
+    void ButtonLeftArrow();
 private:
     Ui::QTFormuleClass *ui;
     void FileSaveTxt(const QString& content);

@@ -21,6 +21,7 @@ set(PROJECT_SOURCES
     QTFormule.h
     QTFormule.cpp
     ColumnFields.cpp
+    ColumnFields.h
 )
 
 qt_add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})

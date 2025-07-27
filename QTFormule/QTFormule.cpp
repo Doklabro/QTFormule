@@ -1,6 +1,8 @@
 #include "QTFormule.h"
 #include <QFileDialog>
-
+#include <list>
+#include"string"
+using namespace std;
 QTFormule::QTFormule(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::QTFormuleClass())
@@ -14,16 +16,20 @@ QTFormule::QTFormule(QWidget *parent)
     this->setWindowFlag(Qt::WindowMinimizeButtonHint, false);
     this->setWindowFlag(Qt::WindowMaximizeButtonHint, false);
 
+
     //Для взаимодействия с формой
     connect(ui->ButtonCancel, SIGNAL(clicked()), this, SLOT(ButtonCancel()));
     connect(ui->ButtonHelp, SIGNAL(clicked()), this, SLOT(ButtonHelp()));
     connect(ui->ButtonOK, SIGNAL(clicked()), this, SLOT(ButtonOK()));
+
     //Для взаимодействия с текстом
     connect(ui->ButtonBS, SIGNAL(clicked()), this, SLOT(ButtonBS()));
-    connect(ui->ButtonUpArrow, SIGNAL(clicked()), this, SLOT(ButtonOperation()));
-    connect(ui->ButtonDownArrow, SIGNAL(clicked()), this, SLOT(ButtonOperation()));
-    connect(ui->ButtonRightArrow, SIGNAL(clicked()), this, SLOT(ButtonOperation()));
-    connect(ui->ButtonLeftArrow, SIGNAL(clicked()), this, SLOT(ButtonOperation()));
+    connect(ui->ButtonLF, SIGNAL(clicked()), this, SLOT(ButtonLF()));
+    connect(ui->ButtonUpArrow, SIGNAL(clicked()), this, SLOT(ButtonUpArrow()));
+    connect(ui->ButtonDownArrow, SIGNAL(clicked()), this, SLOT(ButtonDownArrow()));
+    connect(ui->ButtonRightArrow, SIGNAL(clicked()), this, SLOT(ButtonRightArrow()));
+    connect(ui->ButtonLeftArrow, SIGNAL(clicked()), this, SLOT(ButtonLeftArrow()));
+
     //Для цифр
     connect(ui->Button_0, SIGNAL(clicked()), this, SLOT(ButtonNumbers()));
     connect(ui->Button_1, SIGNAL(clicked()), this, SLOT(ButtonNumbers()));
@@ -35,6 +41,7 @@ QTFormule::QTFormule(QWidget *parent)
     connect(ui->Button_7, SIGNAL(clicked()), this, SLOT(ButtonNumbers()));
     connect(ui->Button_8, SIGNAL(clicked()), this, SLOT(ButtonNumbers()));
     connect(ui->Button_9, SIGNAL(clicked()), this, SLOT(ButtonNumbers()));
+
     //Для мат. операций и символов
     connect(ui->ButtonPlus, SIGNAL(clicked()), this, SLOT(ButtonOperation()));
     connect(ui->ButtonMinus, SIGNAL(clicked()), this, SLOT(ButtonOperation()));
@@ -48,30 +55,32 @@ QTFormule::QTFormule(QWidget *parent)
     connect(ui->ButtonIncrease, SIGNAL(clicked()), this, SLOT(ButtonOperation()));
 
     //Функции
-    ui->TableWidgetFunction->verticalHeader()->setVisible(false);
-    ui->TableWidgetFunction->horizontalHeader()->setVisible(false);
+    ui->TableWidgetFunction->verticalHeader()->hide();
+    ui->TableWidgetFunction->horizontalHeader()->hide();
     ui->TableWidgetFunction->setRowCount(10);
     ui->TableWidgetFunction->setColumnCount(1);
     ui->TableWidgetFunction->setColumnWidth(0, 130);
     //connect(ui->TableWidgetFunction, SIGNAL(cellClicked(int, int)), this, SLOT(PushInColumn()));
 
     //Переменные
-    ui->TableWidgetVariables->verticalHeader()->setVisible(false);
-    ui->TableWidgetVariables->horizontalHeader()->setVisible(false);
+    ui->TableWidgetVariables->verticalHeader()->hide();
+    ui->TableWidgetVariables->horizontalHeader()->hide();
     ui->TableWidgetVariables->setRowCount(10);
     ui->TableWidgetVariables->setColumnCount(1);
     ui->TableWidgetVariables->setColumnWidth(0, 140);
     //connect(ui->TableWidgetVariables, SIGNAL(cellClicked(int, int)), this, SLOT(PushInColumn()));
 
     //Параметры
-    ui->TableWidgetParameters->verticalHeader()->setVisible(false);
-    ui->TableWidgetParameters->horizontalHeader()->setVisible(false);
+    PushInColumn();
+    ui->TableWidgetParameters->verticalHeader()->hide();
+    ui->TableWidgetParameters->horizontalHeader()->hide();
     ui->TableWidgetParameters->setRowCount(10);
     ui->TableWidgetParameters->setColumnCount(1);
     ui->TableWidgetParameters->setColumnWidth(0, 140);
-    //connect(ui->TableWidgetParameters, SIGNAL(cellClicked(int, int)), this, SLOT(PushInColumn()));
+    PushInColumn();
 
 }
+
 
 QTFormule::~QTFormule()
 {
@@ -95,7 +104,42 @@ void QTFormule::ButtonBS()
 
 void QTFormule::ButtonLF()
 {
+    QTextCursor cursor = ui->textEdit->textCursor();
+    cursor.insertText("\n");
+    ui->textEdit->setTextCursor(cursor);
+    ui->textEdit->setFocus();
+}
 
+void QTFormule::ButtonUpArrow()
+{
+    QTextCursor cursor = ui->textEdit->textCursor();
+    cursor.movePosition(QTextCursor::Up);
+    ui->textEdit->setTextCursor(cursor);
+    ui->textEdit->setFocus();
+}
+
+void QTFormule::ButtonDownArrow()
+{
+    QTextCursor cursor = ui->textEdit->textCursor();
+    cursor.movePosition(QTextCursor::Down);
+    ui->textEdit->setTextCursor(cursor);
+    ui->textEdit->setFocus();
+}
+
+void QTFormule::ButtonLeftArrow()
+{
+    QTextCursor cursor = ui->textEdit->textCursor();
+    cursor.movePosition(QTextCursor::Left);
+    ui->textEdit->setTextCursor(cursor);
+    ui->textEdit->setFocus();
+}
+
+void QTFormule::ButtonRightArrow()
+{
+    QTextCursor cursor = ui->textEdit->textCursor();
+    cursor.movePosition(QTextCursor::Right);
+    ui->textEdit->setTextCursor(cursor);
+    ui->textEdit->setFocus();
 }
 
 void QTFormule::ButtonOK()
@@ -107,20 +151,24 @@ void QTFormule::ButtonOK()
 //Для всех кнопок с цифрами
 void QTFormule::ButtonNumbers()
 {
-    QPushButton* Numbers = (QPushButton*)sender();
-    AllNumbers = ui->textEdit->toPlainText() + Numbers->text();
-    ui->textEdit->setText(AllNumbers);
-
+    QPushButton* Numbers = qobject_cast<QPushButton*>(sender());
+    if (Numbers) {
+        QTextCursor cursor = ui->textEdit->textCursor();
+        cursor.insertText(Numbers->text());
+    }
+    ui->textEdit->setFocus();
 }
 
 //Для всех кнопок с операциями
 void QTFormule::ButtonOperation()
 {
-    QPushButton* Operation = (QPushButton*)sender();
-    AllOperation = ui->textEdit->toPlainText() + Operation->text();
-    ui->textEdit->setText(AllOperation);
+    QPushButton* Operation = qobject_cast<QPushButton*>(sender());
+    if (Operation) {
+        QTextCursor cursor = ui->textEdit->textCursor();
+        cursor.insertText(Operation->text());
+    }
+    ui->textEdit->setFocus();
 }
-
 
 void QTFormule::FileSaveTxt(const QString& content)
 {
@@ -144,5 +192,50 @@ void QTFormule::FileSaveTxt(const QString& content)
 
 void QTFormule::PushInColumn()
 {
+    list<string> function = { "sin(a)","cos(a)","tan(a)","atan(a)","exp(a)" };
+    list<string> variables;
+    list<string> parameters = { "R1.W","R1.L","R1.Rs","R1.Freq" };
 
+    vector<string> functionVec(function.begin(), function.end());
+    vector<string> variablesVec(variables.begin(), variables.end());
+    vector<string> paramsVec(parameters.begin(), parameters.end());
+
+    for (int i = 0; i < ui->TableWidgetFunction->rowCount(); i++)
+    {
+        for (int j = 0; j < ui->TableWidgetFunction->columnCount(); j++)
+        {
+            if (j < functionVec.size())
+            {
+                QTableWidgetItem* item = new QTableWidgetItem;
+                item->setText(QString::fromStdString(functionVec[j]));
+                ui->TableWidgetFunction->setItem(i, j, item);
+            }
+        }
+    }
+
+    for (int i = 0; i < ui->TableWidgetVariables->rowCount(); i++)
+    {
+        for (int j = 0; j < ui->TableWidgetVariables->columnCount(); j++)
+        {
+            if (j < variablesVec.size())
+            {
+                QTableWidgetItem* item = new QTableWidgetItem;
+                item->setText(QString::fromStdString(variablesVec[j]));
+                ui->TableWidgetVariables->setItem(i, j, item);
+            }
+        }
+    }
+
+    for (int i = 0; i < ui->TableWidgetParameters->rowCount(); i++)
+    {
+        for (int j = 0; j < ui->TableWidgetParameters->columnCount(); j++)
+        {
+            if (j < paramsVec.size())
+            {
+                QTableWidgetItem* item = new QTableWidgetItem;
+                item->setText(QString::fromStdString(paramsVec[j]));
+                ui->TableWidgetParameters->setItem(i, j, item);
+            }
+        }
+    }
 }
