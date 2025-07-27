@@ -31,5 +31,6 @@ private slots:
 private:
     Ui::QTFormuleClass *ui;
     void FileSaveTxt(const QString& content);
+    void validateBrackets(const QString& text);
 };
 

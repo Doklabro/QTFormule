@@ -2,6 +2,8 @@
 #include <QFileDialog>
 #include <list>
 #include"string"
+#include <QTextEdit>
+#include <QMessageBox>
 using namespace std;
 QTFormule::QTFormule(QWidget *parent)
     : QWidget(parent)
@@ -144,8 +146,9 @@ void QTFormule::ButtonRightArrow()
 
 void QTFormule::ButtonOK()
 {
-    QString content = ui->textEdit->toPlainText();
-    FileSaveTxt(content);
+    QString text = ui->textEdit->toPlainText();
+    validateBrackets(text);
+    FileSaveTxt(text);
 }
 
 //Для всех кнопок с цифрами
@@ -247,4 +250,25 @@ void QTFormule::onTableCellClicked(int row, int column)
         ui->textEdit->insertPlainText(text);
         ui->textEdit->setFocus();
     }
+}
+
+void QTFormule::validateBrackets(const QString& text) {
+    int i = 0;
+    for (const QChar& ch : text) {
+        if (ch == '(') {
+            i+1;
+        }
+        else if (ch == ')') {
+            i-1;
+        }
+    }
+    if (i !=0)
+    {
+        QMessageBox::warning(this, "Error", "The brackets are not balanced!");
+    }
+    else if (i == 0)
+    {
+        QMessageBox::warning(this, "C:/Users/User/source/TxtFormule/Formule.txt", "The file is saved");
+    }
+
 }
