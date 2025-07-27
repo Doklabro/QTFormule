@@ -54,13 +54,14 @@ QTFormule::QTFormule(QWidget *parent)
     connect(ui->ButtonExponentiation, SIGNAL(clicked()), this, SLOT(ButtonOperation()));
     connect(ui->ButtonIncrease, SIGNAL(clicked()), this, SLOT(ButtonOperation()));
 
+
     //Функции
     ui->TableWidgetFunction->verticalHeader()->hide();
     ui->TableWidgetFunction->horizontalHeader()->hide();
     ui->TableWidgetFunction->setRowCount(10);
     ui->TableWidgetFunction->setColumnCount(1);
     ui->TableWidgetFunction->setColumnWidth(0, 130);
-    //connect(ui->TableWidgetFunction, SIGNAL(cellClicked(int, int)), this, SLOT(PushInColumn()));
+    connect(ui->TableWidgetFunction, SIGNAL(cellClicked(int, int)), this, SLOT(onTableCellClicked(int, int)));
 
     //Переменные
     ui->TableWidgetVariables->verticalHeader()->hide();
@@ -68,17 +69,16 @@ QTFormule::QTFormule(QWidget *parent)
     ui->TableWidgetVariables->setRowCount(10);
     ui->TableWidgetVariables->setColumnCount(1);
     ui->TableWidgetVariables->setColumnWidth(0, 140);
-    //connect(ui->TableWidgetVariables, SIGNAL(cellClicked(int, int)), this, SLOT(PushInColumn()));
+    connect(ui->TableWidgetVariables, SIGNAL(cellClicked(int, int)), this, SLOT(onTableCellClicked(int, int)));
 
     //Параметры
-    PushInColumn();
     ui->TableWidgetParameters->verticalHeader()->hide();
     ui->TableWidgetParameters->horizontalHeader()->hide();
     ui->TableWidgetParameters->setRowCount(10);
     ui->TableWidgetParameters->setColumnCount(1);
     ui->TableWidgetParameters->setColumnWidth(0, 140);
+    connect(ui->TableWidgetParameters, SIGNAL(cellClicked(int, int)), this, SLOT(onTableCellClicked(int, int)));
     PushInColumn();
-
 }
 
 
@@ -202,40 +202,49 @@ void QTFormule::PushInColumn()
 
     for (int i = 0; i < ui->TableWidgetFunction->rowCount(); i++)
     {
-        for (int j = 0; j < ui->TableWidgetFunction->columnCount(); j++)
+        if (i < functionVec.size() && !functionVec[i].empty())
         {
-            if (j < functionVec.size())
-            {
-                QTableWidgetItem* item = new QTableWidgetItem;
-                item->setText(QString::fromStdString(functionVec[j]));
-                ui->TableWidgetFunction->setItem(i, j, item);
-            }
+             QTableWidgetItem* item = new QTableWidgetItem;
+             item->setText(QString::fromStdString(functionVec[i]));
+             item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+             ui->TableWidgetFunction->setItem(i, 0, item);
         }
     }
 
+
     for (int i = 0; i < ui->TableWidgetVariables->rowCount(); i++)
     {
-        for (int j = 0; j < ui->TableWidgetVariables->columnCount(); j++)
+        if (i < variablesVec.size())
         {
-            if (j < variablesVec.size())
-            {
-                QTableWidgetItem* item = new QTableWidgetItem;
-                item->setText(QString::fromStdString(variablesVec[j]));
-                ui->TableWidgetVariables->setItem(i, j, item);
-            }
+            QTableWidgetItem* item = new QTableWidgetItem;
+            item->setText(QString::fromStdString(variablesVec[i]));
+            item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+            ui->TableWidgetVariables->setItem(i, 0, item);
         }
     }
 
     for (int i = 0; i < ui->TableWidgetParameters->rowCount(); i++)
     {
-        for (int j = 0; j < ui->TableWidgetParameters->columnCount(); j++)
+        if (i < paramsVec.size())
         {
-            if (j < paramsVec.size())
-            {
-                QTableWidgetItem* item = new QTableWidgetItem;
-                item->setText(QString::fromStdString(paramsVec[j]));
-                ui->TableWidgetParameters->setItem(i, j, item);
-            }
+            QTableWidgetItem* item = new QTableWidgetItem;
+            item->setText(QString::fromStdString(paramsVec[i]));
+            item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+            ui->TableWidgetParameters->setItem(i, 0, item);
         }
+    }
+}
+
+void QTFormule::onTableCellClicked(int row, int column)
+{
+    QTableWidget* table = qobject_cast<QTableWidget*>(sender());
+    if (!table) return;
+
+    QTableWidgetItem* item = table->item(row, column);
+    if (item)
+    {
+        QString text = item->text();
+        ui->textEdit->insertPlainText(text);
+        ui->textEdit->setFocus();
     }
 }

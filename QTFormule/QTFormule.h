@@ -27,6 +27,7 @@ private slots:
     void ButtonDownArrow();
     void ButtonRightArrow();
     void ButtonLeftArrow();
+    void onTableCellClicked(int row, int column);
 private:
     Ui::QTFormuleClass *ui;
     void FileSaveTxt(const QString& content);
