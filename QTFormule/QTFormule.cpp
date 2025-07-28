@@ -1,30 +1,30 @@
-#include "QTFormule.h"
+п»ї#include "QTFormule.h"
 #include <QFileDialog>
 #include <list>
 #include"string"
 #include <QTextEdit>
 #include <QMessageBox>
+
 using namespace std;
 QTFormule::QTFormule(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::QTFormuleClass())
 {
     ui->setupUi(this);
-    setlocale(LC_ALL, "ru");
     QLocale::setDefault(QLocale::system());
 
-    //Убираем сворачивание, разворачивание и крестик
+    //РЈР±РёСЂР°РµРј СЃРІРѕСЂР°С‡РёРІР°РЅРёРµ, СЂР°Р·РІРѕСЂР°С‡РёРІР°РЅРёРµ Рё РєСЂРµСЃС‚РёРє
     this->setWindowFlag(Qt::WindowCloseButtonHint, false);
     this->setWindowFlag(Qt::WindowMinimizeButtonHint, false);
     this->setWindowFlag(Qt::WindowMaximizeButtonHint, false);
 
 
-    //Для взаимодействия с формой
+    //Р”Р»СЏ РІР·Р°РёРјРѕРґРµР№СЃС‚РІРёСЏ СЃ С„РѕСЂРјРѕР№
     connect(ui->ButtonCancel, SIGNAL(clicked()), this, SLOT(ButtonCancel()));
     connect(ui->ButtonHelp, SIGNAL(clicked()), this, SLOT(ButtonHelp()));
     connect(ui->ButtonOK, SIGNAL(clicked()), this, SLOT(ButtonOK()));
 
-    //Для взаимодействия с текстом
+    //Р”Р»СЏ РІР·Р°РёРјРѕРґРµР№СЃС‚РІРёСЏ СЃ С‚РµРєСЃС‚РѕРј
     connect(ui->ButtonBS, SIGNAL(clicked()), this, SLOT(ButtonBS()));
     connect(ui->ButtonLF, SIGNAL(clicked()), this, SLOT(ButtonLF()));
     connect(ui->ButtonUpArrow, SIGNAL(clicked()), this, SLOT(ButtonUpArrow()));
@@ -32,7 +32,7 @@ QTFormule::QTFormule(QWidget *parent)
     connect(ui->ButtonRightArrow, SIGNAL(clicked()), this, SLOT(ButtonRightArrow()));
     connect(ui->ButtonLeftArrow, SIGNAL(clicked()), this, SLOT(ButtonLeftArrow()));
 
-    //Для цифр
+    //Р”Р»СЏ С†РёС„СЂ
     connect(ui->Button_0, SIGNAL(clicked()), this, SLOT(ButtonNumbers()));
     connect(ui->Button_1, SIGNAL(clicked()), this, SLOT(ButtonNumbers()));
     connect(ui->Button_2, SIGNAL(clicked()), this, SLOT(ButtonNumbers()));
@@ -44,7 +44,7 @@ QTFormule::QTFormule(QWidget *parent)
     connect(ui->Button_8, SIGNAL(clicked()), this, SLOT(ButtonNumbers()));
     connect(ui->Button_9, SIGNAL(clicked()), this, SLOT(ButtonNumbers()));
 
-    //Для мат. операций и символов
+    //Р”Р»СЏ РјР°С‚. РѕРїРµСЂР°С†РёР№ Рё СЃРёРјРІРѕР»РѕРІ
     connect(ui->ButtonPlus, SIGNAL(clicked()), this, SLOT(ButtonOperation()));
     connect(ui->ButtonMinus, SIGNAL(clicked()), this, SLOT(ButtonOperation()));
     connect(ui->ButtonPoint, SIGNAL(clicked()), this, SLOT(ButtonOperation()));
@@ -57,7 +57,7 @@ QTFormule::QTFormule(QWidget *parent)
     connect(ui->ButtonIncrease, SIGNAL(clicked()), this, SLOT(ButtonOperation()));
 
 
-    //Функции
+    //Р¤СѓРЅРєС†РёРё
     ui->TableWidgetFunction->verticalHeader()->hide();
     ui->TableWidgetFunction->horizontalHeader()->hide();
     ui->TableWidgetFunction->setRowCount(10);
@@ -65,7 +65,7 @@ QTFormule::QTFormule(QWidget *parent)
     ui->TableWidgetFunction->setColumnWidth(0, 130);
     connect(ui->TableWidgetFunction, SIGNAL(cellClicked(int, int)), this, SLOT(onTableCellClicked(int, int)));
 
-    //Переменные
+    //РџРµСЂРµРјРµРЅРЅС‹Рµ
     ui->TableWidgetVariables->verticalHeader()->hide();
     ui->TableWidgetVariables->horizontalHeader()->hide();
     ui->TableWidgetVariables->setRowCount(10);
@@ -73,7 +73,7 @@ QTFormule::QTFormule(QWidget *parent)
     ui->TableWidgetVariables->setColumnWidth(0, 140);
     connect(ui->TableWidgetVariables, SIGNAL(cellClicked(int, int)), this, SLOT(onTableCellClicked(int, int)));
 
-    //Параметры
+    //РџР°СЂР°РјРµС‚СЂС‹
     ui->TableWidgetParameters->verticalHeader()->hide();
     ui->TableWidgetParameters->horizontalHeader()->hide();
     ui->TableWidgetParameters->setRowCount(10);
@@ -151,7 +151,7 @@ void QTFormule::ButtonOK()
     FileSaveTxt(text);
 }
 
-//Для всех кнопок с цифрами
+//Р”Р»СЏ РІСЃРµС… РєРЅРѕРїРѕРє СЃ С†РёС„СЂР°РјРё
 void QTFormule::ButtonNumbers()
 {
     QPushButton* Numbers = qobject_cast<QPushButton*>(sender());
@@ -163,7 +163,7 @@ void QTFormule::ButtonNumbers()
     ui->textEdit->setFocus();
 }
 
-//Для всех кнопок с операциями
+//Р”Р»СЏ РІСЃРµС… РєРЅРѕРїРѕРє СЃ РѕРїРµСЂР°С†РёСЏРјРё
 void QTFormule::ButtonOperation()
 {
     QPushButton* Operation = qobject_cast<QPushButton*>(sender());
@@ -198,12 +198,9 @@ void QTFormule::FileSaveTxt(const QString& content)
 
 void QTFormule::PushInColumn()
 {
-    list<string> function = { "sin(a)","cos(a)","tan(a)","atan(a)","exp(a)" };
-    list<string> variables;
-    list<string> parameters = { "R1.W","R1.L","R1.Rs","R1.Freq" };
+    Formule f = Formule();
 
-    vector<string> functionVec(function.begin(), function.end());
-
+    vector<string> functionVec(f.function.begin(), f.function.end());
     for (int i = 0; i < ui->TableWidgetFunction->rowCount(); i++)
     {
         if (i < functionVec.size() && !functionVec[i].empty())
@@ -215,7 +212,7 @@ void QTFormule::PushInColumn()
         }
     }
 
-    vector<string> variablesVec(variables.begin(), variables.end());
+    vector<string> variablesVec(f.variables.begin(), f.variables.end());
     for (int i = 0; i < ui->TableWidgetVariables->rowCount(); i++)
     {
         if (i < variablesVec.size())
@@ -227,7 +224,7 @@ void QTFormule::PushInColumn()
         }
     }
 
-    vector<string> paramsVec(parameters.begin(), parameters.end());
+    vector<string> paramsVec(f.parameters.begin(), f.parameters.end());
     for (int i = 0; i < ui->TableWidgetParameters->rowCount(); i++)
     {
         if (i < paramsVec.size())
@@ -271,12 +268,12 @@ void QTFormule::validateBrackets(const QString& text)
 
     if (i != 0 || i > 0 || i < 0)
     {
-        QMessageBox::warning(this, ("Warning"), "The brackets are not balanced!");
+        QMessageBox::warning(this, ("РћС€РёР±РєР°"), "Р’РІРµРґРёС‚Рµ РЅРµРґРѕСЃС‚Р°СЋС‰РёРµ СЃРєРѕР±РєРё!");
     }
-
+    
     else
     {
-        QMessageBox::information(this, "C:/Users/User/source/TxtFormule/Formule.txt", "The file is saved");
+        QMessageBox::information(this, "C:/Users/User/source/TxtFormule/Formule.txt", "Р¤Р°Р№Р» СЃРѕС…СЂР°РЅС‘РЅ");
     }
 
 }
