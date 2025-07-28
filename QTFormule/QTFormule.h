@@ -11,7 +11,7 @@ class QTFormule : public QWidget
 {
     Q_OBJECT
 
-public:
+public: 
     QTFormule(QWidget *parent = nullptr);
     ~QTFormule();
 private slots:

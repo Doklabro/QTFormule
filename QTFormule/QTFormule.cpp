@@ -10,7 +10,7 @@ QTFormule::QTFormule(QWidget *parent)
     , ui(new Ui::QTFormuleClass())
 {
     ui->setupUi(this);
-
+    setlocale(LC_ALL, "ru");
     QLocale::setDefault(QLocale::system());
 
     //”бираем сворачивание, разворачивание и крестик
@@ -155,7 +155,8 @@ void QTFormule::ButtonOK()
 void QTFormule::ButtonNumbers()
 {
     QPushButton* Numbers = qobject_cast<QPushButton*>(sender());
-    if (Numbers) {
+    if (Numbers) 
+    {
         QTextCursor cursor = ui->textEdit->textCursor();
         cursor.insertText(Numbers->text());
     }
@@ -166,7 +167,8 @@ void QTFormule::ButtonNumbers()
 void QTFormule::ButtonOperation()
 {
     QPushButton* Operation = qobject_cast<QPushButton*>(sender());
-    if (Operation) {
+    if (Operation) 
+    {
         QTextCursor cursor = ui->textEdit->textCursor();
         cursor.insertText(Operation->text());
     }
@@ -177,7 +179,8 @@ void QTFormule::FileSaveTxt(const QString& content)
 {
 
     QDir dir("C:/Users/User/source/TxtFormule");
-    if (!dir.exists()) {
+    if (!dir.exists()) 
+    {
         dir.mkpath(".");
     }
 
@@ -200,8 +203,6 @@ void QTFormule::PushInColumn()
     list<string> parameters = { "R1.W","R1.L","R1.Rs","R1.Freq" };
 
     vector<string> functionVec(function.begin(), function.end());
-    vector<string> variablesVec(variables.begin(), variables.end());
-    vector<string> paramsVec(parameters.begin(), parameters.end());
 
     for (int i = 0; i < ui->TableWidgetFunction->rowCount(); i++)
     {
@@ -214,7 +215,7 @@ void QTFormule::PushInColumn()
         }
     }
 
-
+    vector<string> variablesVec(variables.begin(), variables.end());
     for (int i = 0; i < ui->TableWidgetVariables->rowCount(); i++)
     {
         if (i < variablesVec.size())
@@ -226,6 +227,7 @@ void QTFormule::PushInColumn()
         }
     }
 
+    vector<string> paramsVec(parameters.begin(), parameters.end());
     for (int i = 0; i < ui->TableWidgetParameters->rowCount(); i++)
     {
         if (i < paramsVec.size())
@@ -252,23 +254,29 @@ void QTFormule::onTableCellClicked(int row, int column)
     }
 }
 
-void QTFormule::validateBrackets(const QString& text) {
+void QTFormule::validateBrackets(const QString& text) 
+{
     int i = 0;
-    for (const QChar& ch : text) {
-        if (ch == '(') {
-            i+1;
+    for (const QChar& ch : text) 
+    {
+        if (ch == '(') 
+        {
+            i++;
         }
-        else if (ch == ')') {
-            i-1;
+        else if (ch == ')') 
+        {
+            i--;
         }
     }
-    if (i !=0)
+
+    if (i != 0 || i > 0 || i < 0)
     {
-        QMessageBox::warning(this, "Error", "The brackets are not balanced!");
+        QMessageBox::warning(this, ("Warning"), "The brackets are not balanced!");
     }
-    else if (i == 0)
+
+    else
     {
-        QMessageBox::warning(this, "C:/Users/User/source/TxtFormule/Formule.txt", "The file is saved");
+        QMessageBox::information(this, "C:/Users/User/source/TxtFormule/Formule.txt", "The file is saved");
     }
 
 }
