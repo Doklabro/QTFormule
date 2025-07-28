@@ -200,7 +200,7 @@ void QTFormule::PushInColumn()
     vector<string> functionVec(f.function.begin(), f.function.end());
     for (int i = 0; i < ui->TableWidgetFunction->rowCount(); i++)
     {
-        if (i < functionVec.size() && !functionVec[i].empty())
+        if (i < functionVec.size())
         {
              QTableWidgetItem* item = new QTableWidgetItem;
              item->setText(QString::fromStdString(functionVec[i]));
