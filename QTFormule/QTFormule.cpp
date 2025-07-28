@@ -18,7 +18,6 @@ QTFormule::QTFormule(QWidget *parent)
     this->setWindowFlag(Qt::WindowMinimizeButtonHint, false);
     this->setWindowFlag(Qt::WindowMaximizeButtonHint, false);
 
-
     //Для взаимодействия с формой
     connect(ui->ButtonCancel, SIGNAL(clicked()), this, SLOT(ButtonCancel()));
     connect(ui->ButtonHelp, SIGNAL(clicked()), this, SLOT(ButtonHelp()));
@@ -56,7 +55,6 @@ QTFormule::QTFormule(QWidget *parent)
     connect(ui->ButtonExponentiation, SIGNAL(clicked()), this, SLOT(ButtonOperation()));
     connect(ui->ButtonIncrease, SIGNAL(clicked()), this, SLOT(ButtonOperation()));
 
-
     //Функции
     ui->TableWidgetFunction->verticalHeader()->hide();
     ui->TableWidgetFunction->horizontalHeader()->hide();
@@ -83,7 +81,6 @@ QTFormule::QTFormule(QWidget *parent)
     PushInColumn();
 }
 
-
 QTFormule::~QTFormule()
 {
     delete ui;
@@ -96,7 +93,7 @@ void QTFormule::ButtonCancel()
 
 void QTFormule::ButtonHelp()
 {
-
+    QMessageBox::information(this, "Справка о формулах", "Москвин В.Д. 2025");
 }
 
 void QTFormule::ButtonBS()
@@ -179,7 +176,7 @@ void QTFormule::FileSaveTxt(const QString& content)
 {
 
     QDir dir("C:/Users/User/source/TxtFormule");
-    if (!dir.exists()) 
+    if (!dir.exists())
     {
         dir.mkpath(".");
     }
